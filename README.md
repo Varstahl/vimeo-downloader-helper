@@ -18,6 +18,8 @@ I was given a Vimeo link by coworkers, but they forgot to allow download of the 
 $ python vimeo.py <URL>
 
 VIDEO_TITLE [BEST_VIDEO_QUALITY@FRAMERATE]
+* Thumbnail: TOP_RESOLUTION_THUMBNAIL_URL
+
 Video [CODECS, RESOLUTION@FRAMERATE]: VIDEO_URL
 * Audio [CHANNELS]: AUDIO_URL
 * Subtitles [SUB_NAME SUB_LANGUAGE]: SUBTITLES_URL

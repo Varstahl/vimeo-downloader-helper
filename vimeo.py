@@ -133,6 +133,7 @@ def analyze(url):
 	data = jl(re.search(r'var config\s*=\s*(.*?);\s*if\s*\(!config', response.text, re.DOTALL).group(1))
 	dash = data['request']['files']['dash']
 	hls  = data['request']['files']['hls']
+	thmb = data['video']['thumbs']['base']
 
 	# Find the highest stream quality
 	streams = {int(x['quality'][:-1]): x for x in dash['streams']}
@@ -145,13 +146,14 @@ def analyze(url):
 	m3u8 = parse_m3u8(rebuildStream(tqsId, first(hls['cdns'])['url']))
 
 	print('{} [{}@{}]'.format(title, topQualityStream['quality'], topQualityStream['fps']))
+	print('* Thumbnail: {}'.format(thmb))
 	parsed = { 'audio': [], 'subs': [] }
 	for video in m3u8['video']:
 		audio = [x for x in m3u8['audio'] if x['group-id'] == video['audio']][0]
 		subs = [x for x in m3u8['subs'] if x['group-id'] == video['subtitles']][0]
 		parsed['audio'].append(audio['group-id'])
 		parsed['subs'].append(subs['group-id'])
-		print('Video [{}, {}@{}]: {}'.format(video['codecs'], video['resolution'], video['frame-rate'], video['url']))
+		print('\nVideo [{}, {}@{}]: {}'.format(video['codecs'], video['resolution'], video['frame-rate'], video['url']))
 		print('* Audio [{}ch]: {}'.format(audio['channels'], audio['url']))
 		print('* Subtitles [{} {}]: {}'.format(subs['name'], subs['language'], subs['url']))
 	print('\nDownload and rebuild with: ffmpeg.exe -i master.mp4 -i playlist.mp4 -c copy -map 0:v:0 -map 1:a:0 combined.mp4')
